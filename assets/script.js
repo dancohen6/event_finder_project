@@ -153,5 +153,13 @@ $(function () {
         console.error(error);
       });
   }
-  $("button").on("click", handleRequest);
+  $("#search-button").on("click", handleRequest);
+
+
+  function handleModalSubmission() {
+    $('.modal').hide()
+    var preferredCity = $('#preferredCity').val()
+    $('#search').val(preferredCity)
+  }
+  $('#modal-button').on('click', handleModalSubmission)
 });
