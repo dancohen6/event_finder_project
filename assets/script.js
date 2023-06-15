@@ -1,4 +1,5 @@
 $(function () {
+  
   var mapBoxKey =
     "pk.eyJ1IjoiamVyZW15dGJveWVyIiwiYSI6ImNsaXYwa3EzODAzamIzZm53ajAzOG13eGUifQ.2OBZgtgqI-ZgvNqhPN1iFw";
   var ticketMasterKey = "z2QxkbAvwHIeIktH66VAhDwXlDvuDjpg";
@@ -114,6 +115,7 @@ $(function () {
               url: event.url,
             };
           });
+          
           // Loop through each event and create a table element
           venues.forEach(function (venue) {
             $(".table-heading").after(
@@ -132,10 +134,10 @@ $(function () {
                 "</p>" +
                 "</td>" +
                 "<td><p>" +
-                venue.date +
+                dayjs(venue.date).format('MM/DD/YYYY') +
                 "</p>" +
                 "<p>" +
-                venue.time +
+                dayjs(venue.time).format('h:mm A') +
                 "</p></td>" +
                 "</tr>"
             );
@@ -146,8 +148,6 @@ $(function () {
         } else {
           $(".empty-response-warning").show();
         }
-
-        
       })
       .fail(function (error) {
         console.error(error);
