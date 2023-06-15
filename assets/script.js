@@ -1,5 +1,4 @@
 $(function () {
-  
   var mapBoxKey =
     "pk.eyJ1IjoiamVyZW15dGJveWVyIiwiYSI6ImNsaXYwa3EzODAzamIzZm53ajAzOG13eGUifQ.2OBZgtgqI-ZgvNqhPN1iFw";
   var ticketMasterKey = "z2QxkbAvwHIeIktH66VAhDwXlDvuDjpg";
@@ -115,7 +114,7 @@ $(function () {
               url: event.url,
             };
           });
-          
+
           // Loop through each event and create a table element
           venues.forEach(function (venue) {
             $(".table-heading").after(
@@ -134,10 +133,10 @@ $(function () {
                 "</p>" +
                 "</td>" +
                 "<td><p>" +
-                dayjs(venue.date).format('MM/DD/YYYY') +
+                dayjs(venue.date).format("MM/DD/YYYY") +
                 "</p>" +
                 "<p>" +
-                dayjs(venue.date + venue.time).format('h:mm A') +
+                dayjs(venue.date + venue.time).format("h:mm A") +
                 "</p></td>" +
                 "</tr>"
             );
@@ -153,5 +152,18 @@ $(function () {
         console.error(error);
       });
   }
-  $("button").on("click", handleRequest);
+  $("#search-button").on("click", handleRequest);
+
+  function handleModalSubmission() {
+    $(".modal").hide();
+    var preferredCity = $("#modal-input").val();
+    $("#search").val(preferredCity);
+    localStorage.setItem("preferredCity", preferredCity);
+  }
+  if (localStorage.getItem("preferredCity")) {
+    $(".modal").hide();
+    var storedCity = localStorage.getItem("preferredCity");
+    $("#search").val(storedCity);
+  }
+  $("#modal-btn").on("click", handleModalSubmission);
 });
