@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -10,8 +9,11 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="assets/style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="assets/style.css" />
     <title>Event Finder App</title>
   </head>
 
@@ -20,10 +22,16 @@
       <nav class="navbar level" role="navigation" aria-label="main navigation">
         <div class="navbar-brand level-left">
           <a class="navbar-item level-item" href="https://bulma.io">
-            <img class="logo" src="assets/project_1_logo.png">
+            <img class="logo" src="assets/project_1_logo.png" />
           </a>
-      
-          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+
+          <a
+            role="button"
+            class="navbar-burger"
+            aria-label="menu"
+            aria-expanded="false"
+            data-target="navbarBasicExample"
+          >
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -32,28 +40,60 @@
 
         <div class="level-right search-input">
           <div class="level-item">
-          <div class="date-picker"><input type="date" name="" id=""></div></div>
+            <div class="date-picker-container">
+              <input type="date" name="" id="date-picker" />
+            </div>
+          </div>
           <div class="level-item">
             <div class="field has-addons">
               <p class="control">
-                <input class="input is-rounded" type="text" placeholder="Search a Major City">
+                <input
+                  id="search"
+                  class="input is-rounded"
+                  type="text"
+                  placeholder="Search a Major City"
+                />
               </p>
               <p class="control">
-                <button class="button">
-                  Search
-                </button>
+                <button class="button">Search</button>
               </p>
             </div>
           </div>
-      </div>
+        </div>
       </nav>
     </header>
 
-    <div id="map" style="width: 75%; height: 650px"></div>
-    <div class="events"></div>
+    <div class="notification has-text-centered date-warning is-danger">
+      <button class="delete"></button>
+      <strong>Please pick a date</strong>
+    </div>
+    <div
+      class="notification has-text-centered empty-response-warning is-danger"
+    >
+      <button class="delete"></button>
+      <strong
+        >Your search returned 0 results, try picking another city or another
+        day</strong
+      >
+    </div>
+
+    <div id="map" style="width: 75%; height: 450px"></div>
+
+    <div class="events-table level">
+      <table class="table level-item">
+        <tr class="table-heading">
+          <th>Event & Venue Details</th>
+          <th>Time & Date</th>
+        </tr>
+      </table>
+    </div>
+    <footer>
+      <div class="footer-container has-text-centered">
+        <p>&copy; 2023 Event Finder</p>
+      </div>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
     <script src="assets/script.js"></script>
   </body>
-
-</html> 
+</html>

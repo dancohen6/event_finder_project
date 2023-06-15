@@ -3,97 +3,153 @@ $(function () {
     "pk.eyJ1IjoiamVyZW15dGJveWVyIiwiYSI6ImNsaXYwa3EzODAzamIzZm53ajAzOG13eGUifQ.2OBZgtgqI-ZgvNqhPN1iFw";
   var ticketMasterKey = "z2QxkbAvwHIeIktH66VAhDwXlDvuDjpg";
 
-  // Specify the date for filtering
-  var date = "2023-06-15";
-
   // Initialize the map
   mapboxgl.accessToken = mapBoxKey;
   var map = new mapboxgl.Map({
     container: "map",
     style: "mapbox://styles/mapbox/streets-v11",
-    center: [-74.5, 40], // Set the initial center of the map
-    zoom: 10, // Set the initial zoom level of the map
+    center: [-95.7129, 37.0902], // Set the initial center of the map
+    zoom: 3, // Set the initial zoom level of the map
   });
 
-  // Make the API request to retrieve events
-  $.get("https://app.ticketmaster.com/discovery/v2/events.json", {
-    apikey: ticketMasterKey,
-    city: "philadelphia",
-    // countryCode: 'US',
-    startDateTime: date + "T00:00:00Z",
-    endDateTime: date + "T23:59:59Z",
-    size: 200, // Increase the size parameter to retrieve more events (maximum is 200)
-  })
-    .done(function (response) {
-      // Extract venue IDs and event details from the response
-      var venues = response._embedded.events.map(function (event) {
-        var venue = event._embedded.venues[0];
-        console.log(venue);
-        return {
-          id: venue.id,
-          address:
-            venue.address.line1 +
-            ", " +
-            venue.city.name +
-            ", " +
-            venue.state.name +
-            ", " +
-            venue.country.name,
-          coordinates: venue.location.longitude + "," + venue.location.latitude,
-          name: event.name,
-          date: event.dates.start.localDate,
-          time: event.dates.start.localTime,
-          url: event.url,
-        };
-      });
+  const nav = new mapboxgl.NavigationControl();
+  map.addControl(nav, "top-right");
 
-      venues.forEach(function (venue) {
-        $(".events").append(
-          "<h3>" +
-            venue.name +
-            "</h3>" +
-            "<p>Date: " +
-            venue.date +
-            "</p>" +
-            "<p>Time: " +
-            venue.time +
-            "</p>" +
-            "<p>Address: " +
-            venue.address +
-            "</p>" +
-            '<p><a href="' +
-            venue.url +
-            '" target="_blank">Event Details</a></p>'
+  // Store the map markers in an array
+  var markers = [];
+
+  // Function to add markers to the map
+  function addMarkers(venues) {
+    venues.forEach(function (venue) {
+      var marker = new mapboxgl.Marker()
+        .setLngLat(venue.coordinates.split(","))
+        .addTo(map)
+        .setPopup(
+          new mapboxgl.Popup().setHTML(
+            "<h3><b>" +
+              venue.name +
+              "</b></h3>" +
+              "<p>Date: " +
+              venue.date +
+              "</p>" +
+              "<p>Time: " +
+              venue.time +
+              "</p>" +
+              "<p>Address: " +
+              venue.address +
+              "</p>" +
+              '<p><a href="' +
+              venue.url +
+              '" target="_blank">Event Details</a></p>'
+          )
         );
-      });
 
-      // Add markers to the map
-      venues.forEach(function (venue) {
-        var marker = new mapboxgl.Marker()
-          .setLngLat(venue.coordinates.split(","))
-          .addTo(map)
-          .setPopup(
-            new mapboxgl.Popup().setHTML(
-              "<h3>" +
-                venue.name +
-                "</h3>" +
-                "<p>Date: " +
-                venue.date +
-                "</p>" +
-                "<p>Time: " +
-                venue.time +
-                "</p>" +
-                "<p>Address: " +
-                venue.address +
-                "</p>" +
-                '<p><a href="' +
-                venue.url +
-                '" target="_blank">Event Details</a></p>'
-            )
-          );
-      });
-    })
-    .fail(function (error) {
-      console.error(error);
+      markers.push(marker);
     });
+
+    var bounds = new mapboxgl.LngLatBounds();
+    markers.forEach(function (marker) {
+      bounds.extend(marker.getLngLat());
+    });
+    console.log(bounds);
+    map.fitBounds(bounds, { padding: 50 });
+  }
+
+  // Function to remove markers from the map
+  function removeMarkers() {
+    markers.forEach(function (marker) {
+      marker.remove();
+    });
+    markers = [];
+  }
+
+  var venues;
+
+  function handleRequest() {
+    $(".table-heading").nextAll().empty(); // Clear the table on every submit
+    var datePicker = $("#date-picker").val(); // Get Date value
+    var searchValue = $("#search").val(); // Get Search value
+
+    if (!datePicker) {
+      $(".date-warning").show();
+    } else {
+      $(".date-warning").hide();
+    }
+
+    // Make the API request to retrieve events
+    $.get("https://app.ticketmaster.com/discovery/v2/events.json", {
+      apikey: ticketMasterKey,
+      city: searchValue,
+      // countryCode: 'US',
+      startDateTime: datePicker + "T00:00:00Z",
+      endDateTime: datePicker + "T23:59:59Z",
+      size: 200,
+    })
+      .then(function (response) {
+        // Extract venue IDs and event details from the response
+        venues = response._embedded.events.map(function (event) {
+          var venue = event._embedded.venues[0];
+          console.log(venue);
+          return {
+            id: venue.id,
+            venueName: venue.name,
+            address:
+              venue.address.line1 +
+              ", " +
+              venue.city.name +
+              ", " +
+              venue.state.stateCode +
+              ", " +
+              venue.postalCode,
+            coordinates:
+              venue.location.longitude + "," + venue.location.latitude,
+            name: event.name,
+            date: event.dates.start.localDate,
+            time: event.dates.start.localTime,
+            url: event.url,
+          };
+        });
+
+        // Handle empty responses
+        if (!venues || venues.length === 0 || events === undefined) {
+          $(".empty-response-warning").show();
+        } else {
+          $(".empty-response-warning").hide();
+        }
+
+        // Loop through each event and create a table element
+        venues.forEach(function (venue) {
+          $(".table-heading").after(
+            "<tr> " +
+              "<td>" +
+              "<h3><b><a href=" +
+              venue.url +
+              ">" +
+              venue.name +
+              "</a></b></h3>" +
+              "<p>" +
+              venue.venueName +
+              "</p>" +
+              "<p>" +
+              venue.address +
+              "</p>" +
+              "</td>" +
+              "<td><p>" +
+              venue.date +
+              "</p>" +
+              "<p>" +
+              venue.time +
+              "</p></td>" +
+              "</tr>"
+          );
+        });
+
+        removeMarkers();
+        addMarkers(venues);
+      })
+      .fail(function (error) {
+        console.error(error);
+      });
+  }
+  $("button").on("click", handleRequest);
 });

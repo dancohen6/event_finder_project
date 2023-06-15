@@ -1,31 +1,74 @@
 .navbar {
-    background: #717C90;
+  background: #717c90;
 }
 
 .logo {
-    padding-left: 25px;
+  padding-left: 25px;
 }
 
 .search-input {
-    padding-right: 25px;
+  padding-right: 25px;
+}
+
+input[type=date] {
+  font-size: 1.25rem;
+  border-radius: 10px;
+  border: none;
 }
 
 body {
-    background: #2d3142;
-    color: #fff;
+  background: #2d3142;
+  color: #fff;
 }
 
 a {
-    color: #ef8354;
+  color: #ef8354;
+}
+
+a:hover {
+  color: #f7a17d
+}
+
+.date-warning {
+  display: none;
+}
+
+.empty-response-warning {
+  display: none;
 }
 
 #map {
-    margin: 0 auto;
-    margin-top: 2rem;
-    border: 4px solid #717c90;
+  margin: 0 auto;
+  margin-top: 2rem;
+  border: 4px solid #717c90;
+}
+
+.mapboxgl-popup-content {
+  color: #000;
 }
 
 .events {
-    width: 75%;
-    margin: 0 auto;
+  width: 75%;
+  margin: 0 auto;
+}
+
+.events-table {
+  color: #fff;
+  width: 75%;
+  margin: 0 auto;
+}
+
+.table th {
+  color: #fff;
+  font-size: 2rem;
+}
+
+.table {
+  background-color: #2d3142;
+  color: #fff
+}
+
+footer {
+  background-color: #717c90;
+  padding: 10px
 }
