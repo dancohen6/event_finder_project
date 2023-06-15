@@ -1,4 +1,5 @@
 $(function () {
+  
   var mapBoxKey =
     "pk.eyJ1IjoiamVyZW15dGJveWVyIiwiYSI6ImNsaXYwa3EzODAzamIzZm53ajAzOG13eGUifQ.2OBZgtgqI-ZgvNqhPN1iFw";
   var ticketMasterKey = "z2QxkbAvwHIeIktH66VAhDwXlDvuDjpg";
@@ -47,6 +48,7 @@ $(function () {
       markers.push(marker);
     });
 
+    // Set bounding box to snap map to markers on submit
     var bounds = new mapboxgl.LngLatBounds();
     markers.forEach(function (marker) {
       bounds.extend(marker.getLngLat());
@@ -87,69 +89,65 @@ $(function () {
     })
       .then(function (response) {
         // Extract venue IDs and event details from the response
-        venues = response._embedded.events.map(function (event) {
-          var venue = event._embedded.venues[0];
-          console.log(venue);
-          return {
-            id: venue.id,
-            venueName: venue.name,
-            address:
-              venue.address.line1 +
-              ", " +
-              venue.city.name +
-              ", " +
-              venue.state.stateCode +
-              ", " +
-              venue.postalCode,
-            coordinates:
-              venue.location.longitude + "," + venue.location.latitude,
-            name: event.name,
-            date: event.dates.start.localDate,
-            time: event.dates.start.localTime,
-            url: event.url,
-          };
-        });
-
-        // Handle empty responses
-        if (
-          !venues ||
-          response._embedded.events.length === 0 ||
-          response._embedded.events === undefined
-        ) {
-          $(".empty-response-warning").show();
-        } else {
+        console.log(response);
+        //considtional here
+        if (response._embedded) {
           $(".empty-response-warning").hide();
-        }
-        
-        // Loop through each event and create a table element
-        venues.forEach(function (venue) {
-          $(".table-heading").after(
-            "<tr> " +
-              "<td>" +
-              "<h3><b><a href=" +
-              venue.url +
-              ">" +
-              venue.name +
-              "</a></b></h3>" +
-              "<p>" +
-              venue.venueName +
-              "</p>" +
-              "<p>" +
-              venue.address +
-              "</p>" +
-              "</td>" +
-              "<td><p>" +
-              venue.date +
-              "</p>" +
-              "<p>" +
-              venue.time +
-              "</p></td>" +
-              "</tr>"
-          );
-        });
+          venues = response._embedded.events.map(function (event) {
+            var venue = event._embedded.venues[0];
+            console.log(venue);
+            return {
+              id: venue.id,
+              venueName: venue.name,
+              address:
+                venue.address.line1 +
+                ", " +
+                venue.city.name +
+                ", " +
+                venue.state?.stateCode +
+                ", " +
+                venue.postalCode,
+              coordinates:
+                venue.location.longitude + "," + venue.location.latitude,
+              name: event.name,
+              date: event.dates.start.localDate,
+              time: event.dates.start.localTime,
+              url: event.url,
+            };
+          });
+          
+          // Loop through each event and create a table element
+          venues.forEach(function (venue) {
+            $(".table-heading").after(
+              "<tr> " +
+                "<td>" +
+                "<h3><b><a href=" +
+                venue.url +
+                ">" +
+                venue.name +
+                "</a></b></h3>" +
+                "<p>" +
+                venue.venueName +
+                "</p>" +
+                "<p>" +
+                venue.address +
+                "</p>" +
+                "</td>" +
+                "<td><p>" +
+                dayjs(venue.date).format('MM/DD/YYYY') +
+                "</p>" +
+                "<p>" +
+                dayjs(venue.time).format('h:mm A') +
+                "</p></td>" +
+                "</tr>"
+            );
+          });
 
-        removeMarkers();
-        addMarkers(venues);
+          removeMarkers();
+          addMarkers(venues);
+        } else {
+          $(".empty-response-warning").show();
+        }
       })
       .fail(function (error) {
         console.error(error);
