@@ -137,7 +137,7 @@ $(function () {
                 dayjs(venue.date).format('MM/DD/YYYY') +
                 "</p>" +
                 "<p>" +
-                dayjs(venue.time).format('h:mm A') +
+                dayjs(venue.date + venue.time).format('h:mm A') +
                 "</p></td>" +
                 "</tr>"
             );
