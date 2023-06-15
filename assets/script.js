@@ -111,12 +111,16 @@ $(function () {
         });
 
         // Handle empty responses
-        if (!venues || venues.length === 0) {
+        if (
+          !venues ||
+          response._embedded.events.length === 0 ||
+          response._embedded.events === undefined
+        ) {
           $(".empty-response-warning").show();
         } else {
           $(".empty-response-warning").hide();
         }
-
+        
         // Loop through each event and create a table element
         venues.forEach(function (venue) {
           $(".table-heading").after(
