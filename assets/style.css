@@ -78,6 +78,7 @@ a:hover {
   background-color: #2d3142;
   color: #fff;
   background: transparent;
+  padding-bottom: 20px;
 }
 
 footer {
@@ -85,5 +86,5 @@ footer {
   padding: 10px;
   bottom: 0;
   width: 100%;
-  position: sticky;
+  position: fixed;
 }
