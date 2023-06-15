@@ -111,7 +111,7 @@ $(function () {
         });
 
         // Handle empty responses
-        if (!venues || venues.length === 0 || events === undefined) {
+        if (!venues || venues.length === 0) {
           $(".empty-response-warning").show();
         } else {
           $(".empty-response-warning").hide();
