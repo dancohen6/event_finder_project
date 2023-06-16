@@ -36,6 +36,7 @@ From there, the user will purchase their tickets through Ticketmaster and rock o
 
 *3rd Party Libraries*
 - jQuery
+- Dayjs
 
 **URL:** https://dancohen6.github.io/event_finder_project/
 
