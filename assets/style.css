@@ -128,3 +128,7 @@ footer {
   width: 100%;
   position: fixed;
 }
+
+#footer-names {
+  font-weight: bold;
+}
